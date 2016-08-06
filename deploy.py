@@ -34,16 +34,20 @@ if response in ['', 'Y', 'yes', 'YES', 'Yes', 'y']:
     print("Configuring professor node...")
     with open('/etc/rc.local','r+') as rc_file:
         contents = rc_file.readlines()
-        contents.insert(-2,'python /home/pi/raspi-cluster-config-master/start-professor.py &> /home/pi/.cluster.log')
+        line = 'python /home/pi/raspi-cluster-config-master/start-professor.py &> /home/pi/.cluster.log'
+        if line not in contents:
+            contents.insert(-2,line)
     with open('/etc/rc.local','w+') as rc_file:
         rc_file.write("".join(contents))
     print("Generating SSH keys (NOTE: the public key needs to be copied to the student nodes manually!)")
-    call(('ssh-keygen'))
+    call(('runuser', '-l', 'pi', '-c', '"ssh-keygen"'))
 elif response in ['N', 'no', 'NO', 'No', 'n']:
     print("Configuring student node...")
     with open('/etc/rc.local','r+') as rc_file:
         contents = rc_file.readlines()
-        contents.insert(-2,'python /home/pi/raspi-cluster-config-master/start-student.py &> /home/pi/.cluster.log')
+        line = 'python /home/pi/raspi-cluster-config-master/start-student.py &> /home/pi/.cluster.log'
+        if line not in contents:
+            contents.insert(-2,line)
     with open('/etc/rc.local','w+') as rc_file:
         rc_file.write("".join(contents))
 else:
