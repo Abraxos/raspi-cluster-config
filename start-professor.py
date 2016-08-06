@@ -24,11 +24,14 @@ class MulticastListener(DatagramProtocol):
         if all(CLUSTER['student1'], CLUSTER['student2'], CLUSTER['student3']):
             reactor.stop()
 
+print("Professor is listening...")
 reactor.listenMulticast(1871, MulticastListener(), listenMultiple=True)
 reactor.run()
 
 for raspi in CLUSTER:
     print("{0} found at {1}".format(raspi, CLUSTER[raspi]))
+
+print("Students found!")
 
 # Once the IP addresses of all the students have been found, open up a TMUX
 # window and SSH into them
@@ -43,3 +46,6 @@ pane3 = window.split_window(attach=False)
 pane3.send_keys('ssh {0}'.format(CLUSTER['student2']))
 pane4 = window.split_window(attach=False)
 pane4.send_keys('ssh {0}'.format(CLUSTER['student3']))
+
+print("Tmux session initialized, launch using: tmux attach-session -t admin")
+print("Have fun!")
