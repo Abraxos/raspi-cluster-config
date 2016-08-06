@@ -37,6 +37,8 @@ if response in ['', 'Y', 'yes', 'YES', 'Yes', 'y']:
         contents.insert(-2,'python /home/pi/raspi-cluster-config-master/start-professor.py &> /home/pi/.cluster.log')
     with open('/etc/rc.local','w+') as rc_file:
         rc_file.write("".join(contents))
+    print("Generating SSH keys (NOTE: the public key needs to be copied to the student nodes manually!)")
+    call(('ssh-keygen'))
 elif response in ['N', 'no', 'NO', 'No', 'n']:
     print("Configuring student node...")
     with open('/etc/rc.local','r+') as rc_file:
@@ -47,4 +49,4 @@ elif response in ['N', 'no', 'NO', 'No', 'n']:
 else:
     print("Response not understood... Setup incomplete! Exiting.")
     exit(1)
-print("Done!")
+print("Done! - Please configure the student nodes and reboot all of the cluster nodes.")
